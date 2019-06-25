@@ -15,11 +15,18 @@ void setup(){
   ledcAttachPin(FET8,0);
 }
 
-void forward(int speed) {
-  ledcWrite (FET6, 1023-speed); // on
+void forward(int speed) {         //正転
+  ledcWrite (FET6, 1023-speed);   // on
   digitalWrite(FET8, HIGH);       // off
   digitalWrite(FET2, LOW);        // off
   digitalWrite(FET4, HIGH);       // on
+}
+
+void back(int speed) {            //逆転
+  digitalWrite(FET6, HIGH);       // off
+  analogWrite (FET8, 1023-speed); // on
+  digitalWrite(FET2, HIGH);       // on
+  digitalWrite(FET4, LOW);        // off
 }
 
 void stop() {
