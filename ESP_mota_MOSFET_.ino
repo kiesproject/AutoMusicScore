@@ -2,6 +2,7 @@ const int FET6 = 25;
 const int FET8 = 26; 
 const int FET2 = 15;
 const int FET4 = 14; 
+const int sw = 13; 
 
 void setup(){
   Serial.begin( 9600 );
@@ -45,8 +46,27 @@ void brake() {
 
 void loop(){
    int sp = 1024;
-   forward(sp);
-   delay(1000);
-   stop();
-   delay(1000);
+   boolean flag = 0;
+   if(flag == 0){
+     if(digitalRead(sw) == HIGH){
+        flag = !flag;
+        forward(sp);
+        delay(1000);
+     }
+     else { 
+      stop();
+      delay(1000);
+     }
+   }
+   else{
+     if(digitalRead(sw) == LOW){
+        flag = !flag;
+        forward(sp);
+        delay(1000);
+     }
+     else { 
+      stop();
+      delay(1000);
+     }
+   }
 }
