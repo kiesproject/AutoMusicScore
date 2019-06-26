@@ -1,72 +1,28 @@
-const int FET6 = 25;
-const int FET8 = 26; 
-const int FET2 = 15;
-const int FET4 = 14; 
-const int sw = 13; 
-
+#define FET  25
+#define sw  13
+bool flag = 0;
+bool skip = 0;
 void setup(){
   Serial.begin( 9600 );
-  pinMode( motor6, OUTPUT); //信号用ピン
-  pinMode( motor8, OUTPUT); //信号用ピン
-  pinMode( motor2, OUTPUT); //信号用ピン
-  pinMode( motor4, OUTPUT); //信号用ピン
-
-  ledcSetup(0,12800,8); 
-  ledcAttachPin(FET6,0);
-  ledcAttachPin(FET8,0);
+  pinMode( FET, OUTPUT); //信号用ピン
+   pinMode( sw, INPUT_PULLUP);
 }
 
-void forward(int speed) {         //正転
-  ledcWrite (FET6, 1023-speed);   // on
-  digitalWrite(FET8, HIGH);       // off
-  digitalWrite(FET2, LOW);        // off
-  digitalWrite(FET4, HIGH);       // on
-}
 
-void back(int speed) {            //逆転
-  digitalWrite(FET6, HIGH);       // off
-  analogWrite (FET8, 1023-speed); // on
-  digitalWrite(FET2, HIGH);       // on
-  digitalWrite(FET4, LOW);        // off
-}
-
-void stop() {
-  digitalWrite(FET6, HIGH);  // off
-  digitalWrite(FET8, HIGH);  // off
-  digitalWrite(FET2, LOW);   // off
-  digitalWrite(FET4, LOW);   // off
-}
-
-void brake() {
-  digitalWrite(FET6, HIGH);  // off
-  digitalWrite(FET8, HIGH);  // off
-  digitalWrite(FET2, HIGH);  // on
-  digitalWrite(FET4, HIGH);  // on
-}
 
 void loop(){
-   int sp = 1024;
-   boolean flag = 0;
-   if(flag == 0){
-     if(digitalRead(sw) == HIGH){
-        flag = !flag;
-        forward(sp);
-        delay(1000);
-     }
-     else { 
-      stop();
-      delay(1000);
-     }
-   }
-   else{
-     if(digitalRead(sw) == LOW){
-        flag = !flag;
-        forward(sp);
-        delay(1000);
-     }
-     else { 
-      stop();
-      delay(1000);
-     }
-   }
+  Serial.println(digitalRead(sw));
+  if((digitalRead(sw) ^ flag) == 1 && skip == 0){
+    flag = !flag;
+    skip = 1;
+    Serial.println("HIGH");
+    digitalWrite(FET, HIGH);
+    delay(900);
+  }else{
+    if ((digitalRead(sw) ^ flag) == 0 && skip == 1) skip = 0;
+    Serial.println("LOW");
+    digitalWrite(FET, LOW);
+  }
+  delay(100);
+
 }
