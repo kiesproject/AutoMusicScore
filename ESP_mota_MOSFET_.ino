@@ -1,5 +1,5 @@
 #define FET  25
-#define sw  13
+#define sw  23
 bool flag = 0;
 bool skip = 0;
 void setup(){
